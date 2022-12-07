@@ -2,7 +2,6 @@ from flask import Blueprint, render_template, request, redirect, url_for
 from flask_login import login_user, login_required, current_user
 from . import db
 from .models import Admin, User, MyQueue
-import sqlite3
 
 views = Blueprint('views', __name__)
 
@@ -17,6 +16,7 @@ def user():
         new_user = User(antrian=data)
         db.session.add(new_user)
         db.session.commit()
+        return redirect(url_for('views.user'))
     return render_template("home.html",antrian=antrian, pengambilan=pengambilan)
 
 
@@ -42,6 +42,5 @@ def admin():
         data = request.form.get('panggil')
         User.query.filter_by(antrian=data).delete()
         db.session.commit()
-    return render_template('admin.html', user=current_user, panggil=panggil, antrian=antrian)
-
-    
+        return redirect(url_for('views.admin'))
+    return render_template('admin.html', user=current_user, panggil=panggil, antrian=antrian)  

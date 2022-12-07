@@ -29,13 +29,15 @@
         <div class="cursor-pointer hover:border-b"><a href="/login">Admin</a></div>
         <div class="cursor-pointer hover:border-b"><a href="/">User</a></div>
     </header>
-    <section class="md:text-xl text-center py-10 w-[60%] md:w-[80%] max-w-5xl mx-auto ">
+    <section class=" text-center py-10 w-[60%] md:w-[80%] max-w-5xl mx-auto ">
         <form method="POST" class="bg-leftmid1 py-4">
-            <h1 class="pb-4 font-bold text-white">Email</h1>
-            <input type="email" name="email" >
-            <h1 class="py-4 font-bold text-white">Passsword</h1>
-            <input type="password" name="password" >
-            <button type="submit">Login</button>
+          <div>
+            <h1 class="pb-4 font-bold text-white md:text-xl">Email</h1>
+            <input type="email" name="email" class="px-1">
+            <h1 class="py-4 font-bold text-white md:text-xl">Passsword</h1>
+            <input type="password" name="password" class="px-1">
+          </div>
+            <button type="submit" class="bg-white mt-4">Login</button>
         </form>
     </section>
 </body>
