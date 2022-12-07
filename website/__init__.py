@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
+from flask_login import LoginManager, UserMixin
 import sqlite3
 
 db = SQLAlchemy()
@@ -15,53 +16,69 @@ def create_app():
     from .views import views
     app.register_blueprint(views, url_prefix='/')
 
+    # from .models import Admin
+    # login_manager = LoginManager
+    # login_manager.login_view = 'views.login'
+    # login_manager.init_app(app)
+
+    # @login_manager.user_loader
+    # def load_user(id):
+    #     return Admin.query.get(int(id))
+
     return app
 
-class User(db.Model):
-    __tablename__ = 'user'
+# class User(db.Model):
+#     __tablename__ = 'user'
 
-    id = db.Column(db.Integer, primary_key=True)
-    antrian = db.Column(db.Integer)
+#     id = db.Column(db.Integer, primary_key=True)
+#     antrian = db.Column(db.Integer)
 
-class QNode:
-    def __init__(self, value):
-        self.data = value
-        self.next = None
+# class Admin(db.Model, UserMixin):
+#     __tablename__ = 'admin'
 
-class MyQueue:
-    def __init__(self):
-        self.head = None
-        self.tail = None
+#     id = db.Column(db.Integer, primary_key=True)
+#     email = db.Column(db.String(50))
+#     password = db.Column(db.String(50))
 
-    def enqueue(self):
-        conn = sqlite3.connect("./instance/db_antrian.db")
-        curs = conn.cursor()
-        # user = User.query.all()
-        curs.execute('SELECT * FROM user ORDER by antrian asc')
-        head = curs.fetchone()[1]
-        head_node = QNode(int(head))
+# class QNode:
+#     def __init__(self, value):
+#         self.data = value
+#         self.next = None
 
-        curs.execute('SELECT * FROM user ORDER by antrian desc')
-        tail = curs.fetchone()[1]
-        tail_node = QNode(int(tail)+1)
+# class MyQueue:
+#     def __init__(self):
+#         self.head = None
+#         self.tail = None
 
-        self.head = head_node
-        self.head.next = tail_node
-        self.tail = tail_node
+#     def enqueue(self):
+#         conn = sqlite3.connect("./instance/db_antrian.db")
+#         curs = conn.cursor()
+#         # user = User.query.all()
+#         curs.execute('SELECT * FROM user ORDER by antrian asc')
+#         head = curs.fetchone()[1]
+#         head_node = QNode(int(head))
 
-        return self.tail.data
+#         curs.execute('SELECT * FROM user ORDER by antrian desc')
+#         tail = curs.fetchone()[1]
+#         tail_node = QNode(int(tail)+1)
 
-    def dequeue(self):
-        # if (self.head == None):
-        #     print("Empty Queue")
-        #     return 'tes'
+#         self.head = head_node
+#         self.head.next = tail_node
+#         self.tail = tail_node
 
-        temp = self.head
+#         return self.tail.data
 
-        if temp.data == None:
-            return 'Antrian Habis'
+#     def dequeue(self):
+#         # if (self.head == None):
+#         #     print("Empty Queue")
+#         #     return 'tes'
 
-        self.head = self.head.next
-        if (self.head == None):
-            self.tail = None
-        return temp.data
+#         temp = self.head
+
+#         if temp.data == None:
+#             return 'Antrian Habis'
+
+#         self.head = self.head.next
+#         if (self.head == None):
+#             self.tail = None
+#         return temp.data

@@ -1,5 +1,7 @@
-from flask import Blueprint, render_template, request
-from . import db, User, MyQueue
+from flask import Blueprint, render_template, request, redirect, url_for
+from flask_login import login_user, login_required, current_user
+from . import db
+from .models import Admin, User, MyQueue
 import sqlite3
 
 views = Blueprint('views', __name__)
@@ -18,12 +20,21 @@ def user():
     return render_template("home.html",antrian=antrian, pengambilan=pengambilan)
 
 
+@views.route('/login', methods=['GET', 'POST'])
+def login():
+    email = request.form.get('email')
+    password = request.form.get('password')
+    if request.method=='POST':
+        user = Admin.query.filter_by(email=email, password=password).first()
+        if user:
+            # login_user(user, remember=True)
+            return redirect(url_for('views.admin'))
+    return render_template('login.html', user=current_user)
+
+
 @views.route('/admin', methods=['GET', 'POST'])
+# @login_required
 def admin():
-    # conn = sqlite3.connect("./instance/db_antrian.db")
-    # curs = conn.cursor()
-    # curs.execute('SELECT * FROM user ORDER by antrian asc LIMIT 1')
-    # dequeue = curs.fetchone()[1]
     q = MyQueue()
     antrian = q.enqueue()
     panggil = q.dequeue()
@@ -31,5 +42,6 @@ def admin():
         data = request.form.get('panggil')
         User.query.filter_by(antrian=data).delete()
         db.session.commit()
-        
-    return render_template('admin.html', panggil=panggil, antrian=antrian)
+    return render_template('admin.html', user=current_user, panggil=panggil, antrian=antrian)
+
+    
