@@ -1,11 +1,12 @@
 from flask import Blueprint, render_template, request, redirect, url_for
-from flask_login import login_user, login_required, current_user
+from flask_login import login_user, logout_user, current_user
 from . import db
 from .models import Admin, User, MyQueue
 
 views = Blueprint('views', __name__)
 
 @views.route('/', methods=['GET', 'POST'])
+# @login_required
 def user():
     q = MyQueue()
     antrian = q.enqueue()
@@ -17,7 +18,7 @@ def user():
         db.session.add(new_user)
         db.session.commit()
         return redirect(url_for('views.user'))
-    return render_template("home.html",antrian=antrian, pengambilan=pengambilan)
+    return render_template("home.html",antrian=antrian, pengambilan=pengambilan, user=current_user)
 
 
 @views.route('/login', methods=['GET', 'POST'])
@@ -27,13 +28,11 @@ def login():
     if request.method=='POST':
         user = Admin.query.filter_by(email=email, password=password).first()
         if user:
-            # login_user(user, remember=True)
+            login_user(user)
             return redirect(url_for('views.admin'))
     return render_template('login.html', user=current_user)
 
-
 @views.route('/admin', methods=['GET', 'POST'])
-# @login_required
 def admin():
     q = MyQueue()
     antrian = q.enqueue()
@@ -44,3 +43,8 @@ def admin():
         db.session.commit()
         return redirect(url_for('views.admin'))
     return render_template('admin.html', user=current_user, panggil=panggil, antrian=antrian)  
+
+@views.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('views.login'))

@@ -1,44 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Antrian Servis Motor</title>
-    <link rel="stylesheet" href="../public/output.css">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors:{
-              left1: "#780000",
-              leftmid1: "#c1121f",
-              mid1: "#e85d04",
-              rightmid1: "#003049",
-              right1: "#669bbc"
-        },
-          }
-        }
-      }
-    </script>
-</head>
-<body class="bg-left1 font-poppins">
-    <header class="flex justify-center items-center gap-10 text-white py-4 bg-leftmid1">
-        <div class="cursor-pointer hover:border-b"><a href="/login">Admin</a></div>
-        <div class="cursor-pointer hover:border-b"><a href="/">User</a></div>
-    </header>
-    
-    <section class="grid md:grid-cols-2 gap-10 md:text-xl text-center py-10 w-[60%] md:w-[80%] max-w-5xl mx-auto">
-        <form method="POST" class="bg-leftmid1">
-            <h1 class="py-4 font-bold text-white">Ambil antrian</h1>
-            <input type="submit" name="antrian" value='{{antrian}}' class="cursor-pointer w-40 bg-slate-400 text-9xl mb-8">
-        </form>
-        <form method="GET" class="bg-leftmid1">
-            <h1 class="py-4 font-bold text-white">Nomor ambil motor</h1>
-            <input type="submit" name="pengambilan" value="{{pengambilan}}" class="w-40 bg-slate-400 text-9xl mb-8" disabled>
-        </form>
-    </section>
-</body>
-</html>
+{% extends "base.html" %} {% block content%}
+<section class="grid md:grid-cols-2 gap-10 md:text-xl text-center py-10 w-[60%] md:w-[80%] max-w-5xl mx-auto">
+    <form method="POST" class="bg-leftmid1">
+        <h1 class="py-4 font-bold text-white">Ambil antrian</h1>
+        <input type="submit" name="antrian" value='{{antrian}}' class="cursor-pointer w-40 bg-slate-400 text-9xl mb-8">
+    </form>
+    <form method="GET" class="bg-leftmid1">
+        <h1 class="py-4 font-bold text-white">Nomor ambil motor</h1>
+        <input type="submit" name="pengambilan" value="{{pengambilan}}" class="w-40 bg-slate-400 text-9xl mb-8" disabled>
+    </form>
+</section>
+{% endblock %}

@@ -44,10 +44,6 @@ class MyQueue:
         return self.tail.data
 
     def dequeue(self):
-        # if (self.head == None):
-        #     print("Empty Queue")
-        #     return 'tes'
-
         temp = self.head
 
         if temp.data == None:
