@@ -1,23 +1,31 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 from flask_login import login_user, logout_user, current_user
 from . import db
-from .models import Admin, User, MyQueue
+from .models import Admin, User, Kerusakan, MyQueue
+import sqlite3
 
 views = Blueprint('views', __name__)
 
 @views.route('/', methods=['GET', 'POST'])
-# @login_required
 def user():
     q = MyQueue()
     antrian = q.enqueue()
     pengambilan = q.dequeue()
-    
+
     if request.method == "POST":
         data = request.form.get("antrian")
+        kerusakan = request.form.get('kerusakan')
+
         new_user = User(antrian=data)
         db.session.add(new_user)
         db.session.commit()
+
+        new_kerusakan = Kerusakan(kerusakan=kerusakan, user_antrian=data)
+        db.session.add(new_kerusakan)
+        db.session.commit()
+
         return redirect(url_for('views.user'))
+
     return render_template("home.html",antrian=antrian, pengambilan=pengambilan, user=current_user)
 
 
@@ -25,11 +33,13 @@ def user():
 def login():
     email = request.form.get('email')
     password = request.form.get('password')
+
     if request.method=='POST':
         user = Admin.query.filter_by(email=email, password=password).first()
         if user:
             login_user(user)
             return redirect(url_for('views.admin'))
+
     return render_template('login.html', user=current_user)
 
 @views.route('/admin', methods=['GET', 'POST'])
@@ -37,11 +47,19 @@ def admin():
     q = MyQueue()
     antrian = q.enqueue()
     panggil = q.dequeue()
+    # rusak = Kerusakan.query.filter_by(user_antrian=5)
+    conn = sqlite3.connect("./instance/db_antrian.db")
+    curs = conn.cursor()
+    # kerusakan = curs.execute('SELECT kerusakan FROM kerusakan WHERE user_antrian = 5')
+    
     if request.method=='POST':
         data = request.form.get('panggil')
         User.query.filter_by(antrian=data).delete()
+        Kerusakan.query.filter_by(user_antrian=data).delete()
         db.session.commit()
+        
         return redirect(url_for('views.admin'))
+
     return render_template('admin.html', user=current_user, panggil=panggil, antrian=antrian)  
 
 @views.route('/logout')

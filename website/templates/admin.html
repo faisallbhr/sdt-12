@@ -1,8 +1,13 @@
 {% extends "base.html" %} {% block content%}
 <section class="flex justify-center gap-10 md:text-xl text-center py-10 w-[60%] md:w-[80%] max-w-5xl mx-auto">
-    <form method="POST" class="bg-leftmid1">
-        <h1 class="py-4 font-bold text-white">Panggil urutan selanjutnya</h1>
-        <input type="submit" name="panggil" value="{{panggil}}" class="cursor-pointer w-40 bg-slate-400 text-9xl mb-8">
+    <form method="POST">
+        <div class="bg-leftmid1">
+            <h1 class="py-4 font-bold text-white">Panggil urutan selanjutnya</h1>
+            <input type="submit" name="panggil" value="{{panggil}}" class="cursor-pointer w-40 bg-slate-400 text-9xl mb-8">
+        </div>
+        <!-- <div class="bg-leftmid1 my-4">
+            <textarea name="kerusakan" id="" cols="30" rows="10" disabled>{{kerusakan}}</textarea>
+        </div> -->
     </form>
 </section>
 {% endblock %}

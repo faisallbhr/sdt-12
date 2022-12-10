@@ -1,12 +1,23 @@
 {% extends "base.html" %} {% block content%}
-<section class="grid md:grid-cols-2 gap-10 md:text-xl text-center py-10 w-[60%] md:w-[80%] max-w-5xl mx-auto">
-    <form method="POST" class="bg-leftmid1">
-        <h1 class="py-4 font-bold text-white">Ambil antrian</h1>
-        <input type="submit" name="antrian" value='{{antrian}}' class="cursor-pointer w-40 bg-slate-400 text-9xl mb-8">
-    </form>
-    <form method="GET" class="bg-leftmid1">
-        <h1 class="py-4 font-bold text-white">Nomor ambil motor</h1>
-        <input type="submit" name="pengambilan" value="{{pengambilan}}" class="w-40 bg-slate-400 text-9xl mb-8" disabled>
+<section class="">
+    <form method="POST">
+        <div class="my-4 grid md:grid-cols-2 gap-10 md:text-xl text-center py-10 w-[60%] md:w-[80%] max-w-5xl mx-auto">
+            <div class="bg-leftmid1">
+                <h1 class="py-4 font-bold text-white">Jumlah antrian</h1>
+                <div class="w-40 bg-slate-400 text-9xl mb-8 mx-auto">{{antrian}}</div>
+            </div>
+            <div class="bg-leftmid1">
+                <h1 class="py-4 font-bold text-white">Nomor ambil motor</h1>
+                <div class="w-40 bg-slate-400 text-9xl mb-8 mx-auto">{{pengambilan}}</div>
+            </div>
+        </div>
+        <div class="md:text-xl text-center py-10 w-[60%] md:w-[80%] max-w-5xl mx-auto">
+            <input type="text" name="antrian" value='{{antrian}}' hidden>
+            <h1 class="py-4 font-bold text-white">Masukkan kerusakan</h1>
+            <textarea type="text" name="kerusakan"></textarea>
+            <br>
+            <button type="submit">Ambil antrian</button>
+        </div>
     </form>
 </section>
 {% endblock %}
