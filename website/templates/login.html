@@ -1,13 +1,13 @@
 {% extends "base.html" %} {% block content%}
 <section class=" text-center py-10 w-[60%] md:w-[80%] max-w-5xl mx-auto ">
-    <form method="POST" class="bg-leftmid1 py-4">
+    <form method="POST" class="bg-leftmid1 py-4 rounded-md">
       <div>
         <h1 class="pb-4 font-bold text-white md:text-xl">Email</h1>
-        <input type="email" name="email" class="px-1">
+        <input type="email" name="email" class="px-1 rounded-sm">
         <h1 class="py-4 font-bold text-white md:text-xl">Passsword</h1>
-        <input type="password" name="password" class="px-1">
+        <input type="password" name="password" class="px-1 rounded-sm">
       </div>
-        <button type="submit" class="bg-white mt-4">Login</button>
+        <button type="submit" class="bg-white mt-4 px-2">Login</button>
     </form>
 </section>
 {% endblock %}

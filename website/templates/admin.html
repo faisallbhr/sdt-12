@@ -1,13 +1,29 @@
 {% extends "base.html" %} {% block content%}
-<section class="flex justify-center gap-10 md:text-xl text-center py-10 w-[60%] md:w-[80%] max-w-5xl mx-auto">
+<section class="flex justify-center gap-10 md:text-xl py-10 w-[60%] md:w-[90%] max-w-5xl mx-auto">
     <form method="POST">
-        <div class="bg-leftmid1">
-            <h1 class="py-4 font-bold text-white">Panggil urutan selanjutnya</h1>
-            <input type="submit" name="panggil" value="{{panggil}}" class="cursor-pointer w-40 bg-slate-400 text-9xl mb-8">
+        <div class="bg-leftmid1 rounded-md px-10 pb-1 text-center w-80 mx-auto">
+            <h1 class="py-5 font-bold text-white">PANGGIL ANTRIAN SELANJUTNYA</h1>
+            <div name="panggil" class="w-40 bg-slate-400 text-9xl mb-8 mx-auto rounded-md">{{panggil}}</div>
         </div>
-        <!-- <div class="bg-leftmid1 my-4">
-            <textarea name="kerusakan" id="" cols="30" rows="10" disabled>{{kerusakan}}</textarea>
-        </div> -->
+        <input type="text" name="panggil" value='{{panggil}}' hidden>
+        <div class="py-10">
+            <h3 class=" text-center mb-1">NOTA ANTRIAN SELANJUTNYA</h3>
+            <div class="flex justify-center items-center">
+                <div>
+                    <img src="{{img3}}" alt="" class="w-44">
+                </div>
+                Nama: {{nama}} <br>
+                Motor: {{motor}} <br>
+                Plat: {{plat}} <br>
+                Kerusakan: {{kerusakan}} <br>
+            </div>
+        </div>
+        <div class="text-center">
+            Total biaya: <input type="text" name="total"> <br>
+            <input name="next" type="submit" value="PANGGIL" class="bg-leftmid1 py-1 px-2 rounded-sm mt-2 text-white cursor-pointer">
+            <br>
+            <input name="delete" type="submit" value="RESET NOTA" class="bg-leftmid1 py-1 px-2 rounded-sm mt-2 text-white cursor-pointer mt-10">
+        </div>
     </form>
 </section>
 {% endblock %}

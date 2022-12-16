@@ -24,16 +24,28 @@
       }
     </script>
 </head>
-<body class="bg-left1 font-poppins">
-    <header class="flex justify-center items-center gap-10 text-white py-4 bg-leftmid1">
-        {% if user.is_authenticated %}
-        <div class="cursor-pointer hover:border-b"><a href="/admin">Admin</a></div>
-        <div class="cursor-pointer hover:border-b"><a href="/logout">Logout</a></div>
-        <div class="cursor-pointer hover:border-b"><a href="/">User</a></div>
-        {% else %}
-        <div class="cursor-pointer hover:border-b"><a href="/login">Admin</a></div>
-        <div class="cursor-pointer hover:border-b"><a href="/">User</a></div>
-        {% endif %}
+<body class="bg-[#D9D9D9] font-poppins">
+    <header class="flex relative justify-center items-center gap-10 text-white py-4 bg-leftmid1">
+        <div class="absolute w-32 left-0 top-2">
+          <img src="{{img2}}" alt="">
+        </div>
+        <div>
+          <h1 class="font-bold text-4xl text-center mb-2">SERVIS MOTOR JAYA</h1>
+          <div class="flex justify-center gap-10">
+            {% if user.is_authenticated %}
+            <div class="cursor-pointer"><a href="/admin">Admin</a></div>
+            <div class="cursor-pointer"><a href="/logout">Logout</a></div>
+            <div class="cursor-pointer"><a href="/">User</a></div>
+            {% else %}
+            <div class="cursor-pointer"><a href="/login">Admin</a></div>
+            <div class="cursor-pointer"><a href="/">User</a></div>
+            {% endif %}
+          </div>
+        </div>
+        <div class="absolute w-28 right-0 top-[5px]">
+          <img src="{{img1}}" alt="">
+        </div>
+      
     </header>
 
     <div>{% block content %} {% endblock %}</div>

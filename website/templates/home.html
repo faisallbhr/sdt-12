@@ -1,22 +1,86 @@
 {% extends "base.html" %} {% block content%}
-<section class="">
+<section class="relative">
     <form method="POST">
-        <div class="my-4 grid md:grid-cols-2 gap-10 md:text-xl text-center py-10 w-[60%] md:w-[80%] max-w-5xl mx-auto">
-            <div class="bg-leftmid1">
-                <h1 class="py-4 font-bold text-white">Jumlah antrian</h1>
-                <div class="w-40 bg-slate-400 text-9xl mb-8 mx-auto">{{antrian}}</div>
+        <div class="my-4 flex flex-col md:flex-row justify-between gap-10 md:text-xl text-center pt-10 w-[90%] max-w-5xl mx-auto">
+            <div class="bg-leftmid1 rounded-md px-10">
+                <h1 class="py-4 font-bold text-white">JUMLAH ANTRIAN</h1>
+                <div name="antrian" class="w-40 bg-slate-400 text-9xl mb-8 mx-auto rounded-md">{{antrian}}</div>
             </div>
-            <div class="bg-leftmid1">
-                <h1 class="py-4 font-bold text-white">Nomor ambil motor</h1>
-                <div class="w-40 bg-slate-400 text-9xl mb-8 mx-auto">{{pengambilan}}</div>
+            <div class="bg-leftmid1 rounded-md px-10">
+                <h1 class="py-4 font-bold text-white">ANTRIAN SAAT INI</h1>
+                <div class="w-40 bg-slate-400 text-9xl mb-8 mx-auto rounded-md">{{panggil}}</div>
             </div>
         </div>
-        <div class="md:text-xl text-center py-10 w-[60%] md:w-[80%] max-w-5xl mx-auto">
-            <input type="text" name="antrian" value='{{antrian}}' hidden>
-            <h1 class="py-4 font-bold text-white">Masukkan kerusakan</h1>
-            <textarea type="text" name="kerusakan"></textarea>
-            <br>
-            <button type="submit">Ambil antrian</button>
+        <div class="flex justify-center items-center">
+            <div class="w-44">
+                <img src="{{img3}}" alt="">
+            </div>
+            <div>
+                Nama: {{nota_nama}} <br>
+                Motor: {{nota_motor}} <br>
+                Plat: {{nota_plat}} <br>
+                Service: {{nota_kerusakan}} <br>
+                Total biaya: {{nota_biaya}}
+            </div>
+        </div>
+        <input type="text" name="antrian" value='{{antrian}}' hidden>
+
+        <div class="relative bg-leftmid1 py-10 max-w-5xl w-[90%] mx-auto rounded-md">
+            <div class="flex flex-col w-full max-w-xl mx-auto">
+                <div class="grid grid-cols-2 mb-2 w-[90%] mx-auto">
+                    <h3>Nama</h3>
+                    <input name="nama" type="text" class="rounded-sm">
+                </div>
+                <div class="grid grid-cols-2 mb-2 w-[90%] mx-auto">
+                    <h3>Jenis motor</h3>
+                    <input name="motor" type="text" class="rounded-sm">
+                </div>
+                <div class="grid grid-cols-2 mb-9 w-[90%] mx-auto">
+                    <h3>Plat nomor</h3>
+                    <input name="plat" type="text" class="rounded-sm">
+                </div>
+                <div>
+                    <table class="bg-white mx-auto">
+                        <tr>
+                            <td class="text-center px-10 border-[.5px] border-black">Pilih servis</td>
+                            <td class="text-center px-10 border-[.5px] border-black">Servis</td>
+                        </tr>
+                        <tr>
+                            <td class="border-[.5px] border-black">Tune up motor</td>
+                            <td class="text-center border-[.5px] border-black"><input type="checkbox" name="servicecbx" value="service semua"></td>
+                        </tr>
+                        <tr>
+                            <td class="border-[.5px] border-black">Ganti oli mesin</td>
+                            <td class="text-center border-[.5px] border-black"><input type="checkbox" name="servicecbx" value="service dikit"></td>
+                        </tr>
+                        <tr>
+                            <td class="border-[.5px] border-black">Ganti oli gardan</td>
+                            <td class="text-center border-[.5px] border-black"><input type="checkbox" name="servicecbx" value="service dikit"></td>
+                        </tr>
+                        <tr>
+                            <td class="border-[.5px] border-black">Ganti kampas rem</td>
+                            <td class="text-center border-[.5px] border-black"><input type="checkbox" name="servicecbx" value="service dikit"></td>
+                        </tr>
+                        <tr>
+                            <td class="border-[.5px] border-black">Perawatan aki</td>
+                            <td class="text-center border-[.5px] border-black"><input type="checkbox" name="servicecbx" value="service dikit"></td>
+                        </tr>
+                        <tr>
+                            <td class="border-[.5px] border-black">Ganti filter udara</td>
+                            <td class="text-center border-[.5px] border-black"><input type="checkbox" name="servicecbx" value="service dikit"></td>
+                        </tr>
+                        <tr>
+                            <td class="border-[.5px] border-black">Servis motor ringan</td>
+                            <td class="text-center border-[.5px] border-black"><input type="checkbox" name="servicecbx" value="service dikit"></td>
+                        </tr>
+                        <tr>
+                            <td class="border-[.5px] border-black">Servis motor besar</td>
+                            <td class="text-center border-[.5px] border-black"><input type="checkbox" name="servicecbx" value="service dikit"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <button type="submit" class="absolute right-10 bottom-0 bg-white rounded-sm border border-black px-4 mb-1">SERVIS</button>
         </div>
     </form>
 </section>
