@@ -34,7 +34,7 @@ def user():
         tail = cek_tail.fetchone()[1]
 
         cek_nota = curs.execute('SELECT * FROM nota WHERE user_antrian="{}"'.format(head))
-        nota = cek_nota.fetchmany()
+        nota = cek_nota.fetchall()
         curs.close()
         if nota == []:
             nota_nama = '-'
@@ -77,10 +77,10 @@ def login():
     pic2 = os.path.join(app.config['UPLOAD_FOLDER'], '2.png')
     pic3 = os.path.join(app.config['UPLOAD_FOLDER'], 'montir.png')
 
-    email = request.form.get('email')
-    password = request.form.get('password')
 
     if request.method=='POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
         user = Admin.query.filter_by(email=email, password=password).first()
         if user:
             login_user(user)
