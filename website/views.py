@@ -18,14 +18,12 @@ def user():
 
     conn = sqlite3.connect("./instance/db_antrian.db")
     curs = conn.cursor()
+    
     curs.execute('SELECT * FROM user')
     cek = curs.fetchall()
     if cek == []:
-        new_user = User(antrian=0)
-        db.session.add(new_user)
-        db.session.commit()
-        curs.close()
-        return redirect(url_for('views.user'))
+        head = 1
+        tail = 0
     else:
         cek_head = curs.execute('SELECT * FROM user ORDER by antrian asc')
         head = cek_head.fetchone()[1]
@@ -33,42 +31,45 @@ def user():
         cek_tail = curs.execute('SELECT * FROM user ORDER by antrian desc')
         tail = cek_tail.fetchone()[1]
 
-        cek_nota = curs.execute('SELECT * FROM nota WHERE user_antrian="{}"'.format(head))
-        nota = cek_nota.fetchall()
-        curs.close()
-        if nota == []:
-            nota_nama = '-'
-            nota_motor = '-'
-            nota_plat = '-'
-            nota_kerusakan = '-'
-            nota_biaya = '-'
-        else:
-            for row in nota:
-                nota_nama = row[1]
-                nota_motor = row[2]
-                nota_plat = row[3]
-                nota_kerusakan = row[4]
-                nota_biaya = row[5]
 
-        if request.method == "POST":
-            data = request.form.get("antrian")
-            nama = request.form.get('nama')
-            motor = request.form.get('motor')
-            plat = request.form.get('plat')
+    # CEK TAMPILAN NOTA
+    cek_nota = curs.execute('SELECT * FROM nota WHERE user_antrian="{}"'.format(head))
+    nota = cek_nota.fetchall()
+    if nota == []:
+        nota_nama = '-'
+        nota_motor = '-'
+        nota_plat = '-'
+        nota_kerusakan = '-'
+        nota_biaya = '-'
+    else:
+        for row in nota:
+            nota_nama = row[1]
+            nota_motor = row[2]
+            nota_plat = row[3]
+            nota_kerusakan = row[4]
+            nota_biaya = row[5]
 
-            list_kerusakan = request.form.getlist('servicecbx')
-            kerusakan = ''
-            for rusak in list_kerusakan:
-                kerusakan += rusak + ', '
+    
+    # SAAT KLIK SERVIS
+    if request.method == "POST":
+        data = request.form.get("antrian")
+        nama = request.form.get('nama')
+        motor = request.form.get('motor')
+        plat = request.form.get('plat')
 
-            new_user = User(antrian=data)
-            new_kerusakan = Kerusakan(nama=nama, motor=motor, plat=plat, kerusakan=kerusakan, user_antrian=data)
-            db.session.add(new_user)
-            db.session.add(new_kerusakan)
-            db.session.commit()
-            return redirect(url_for('views.user'))
+        list_kerusakan = request.form.getlist('servicecbx')
+        kerusakan = ''
+        for rusak in list_kerusakan:
+            kerusakan += rusak + ', '
 
-        return render_template("home.html", img1=pic1, img2=pic2, img3=pic3, antrian=tail+1, panggil=head, user=current_user, nota_nama=nota_nama, nota_motor=nota_motor, nota_plat=nota_plat,nota_kerusakan=nota_kerusakan, nota_biaya=nota_biaya)
+        new_user = User(antrian=data)
+        new_kerusakan = Kerusakan(nama=nama.upper(), motor=motor.upper(), plat=plat.upper(), kerusakan=kerusakan.upper(), user_antrian=data)
+        db.session.add(new_user)
+        db.session.add(new_kerusakan)
+        db.session.commit()
+        return redirect(url_for('views.user'))
+
+    return render_template("home.html", img1=pic1, img2=pic2, img3=pic3, antrian=tail+1, panggil=head-1, user=current_user, nota_nama=nota_nama, nota_motor=nota_motor, nota_plat=nota_plat,nota_kerusakan=nota_kerusakan, nota_biaya=nota_biaya)
 
 
 @views.route('/login', methods=['GET', 'POST'])
@@ -100,51 +101,41 @@ def admin():
     curs.execute('SELECT * FROM user')
     cek = curs.fetchall()
     if cek == []:
-        new_user = User(antrian=0)
-        db.session.add(new_user)
-        db.session.commit()
-        curs.close()
-        return redirect(url_for('views.admin'))
+        head = 0
+    else:
+        curs.execute('SELECT * FROM user ORDER by antrian asc')
+        head = curs.fetchone()[1]
 
-    curs.execute('SELECT * FROM user ORDER by antrian asc')
-    head = curs.fetchone()[1]
-
+    # CEK NOTA
     cek = curs.execute('SELECT * FROM kerusakan WHERE user_antrian="{}"'.format(head))
     cek = cek.fetchall()
     if cek == []:
-        new_kerusakan = Kerusakan(nama='', motor='', plat='', kerusakan='', user_antrian=0)
-        db.session.add(new_kerusakan)
-        db.session.commit()
-        curs.close()
-        return redirect(url_for('views.admin'))
-
-
-    cek_next = curs.execute('SELECT * FROM kerusakan WHERE user_antrian="{}"'.format(head+1))
-    cek_next = cek_next.fetchall()
-    if cek_next == []:
         nama = '-'
         motor = '-'
         plat = '-'
         kerusakan = '-'
     else:
-        for row in cek_next:
+        for row in cek:
             nama = row[1]
             motor = row[2]
             plat = row[3]
             kerusakan = row[4]
+
     if request.method=='POST':
+        # SAAT KLIK PANGGIL
         if request.form.get('next') == 'PANGGIL':
             data = request.form.get('panggil')
             total = request.form.get('total')
             
             User.query.filter_by(antrian=data).delete()
             Kerusakan.query.filter_by(user_antrian=data).delete()
-            new_nota = Nota(nama=nama, motor=motor, plat=plat, kerusakan=kerusakan, biaya=int(total), user_antrian=int(data)+1)
+            new_nota = Nota(nama=nama.upper(), motor=motor.upper(), plat=plat.upper(), kerusakan=kerusakan.upper(), biaya=int(total), user_antrian=int(data)+1)
             db.session.add(new_nota)
             db.session.commit()
 
             return redirect(url_for('views.admin'))
 
+        # SAAT KLIK RESET NOTA
         if request.form.get('delete') == 'RESET NOTA':
             cek = Nota.query.all()
             for i in range(len(cek)+1):

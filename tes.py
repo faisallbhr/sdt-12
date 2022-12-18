@@ -1,7 +1,7 @@
-import sqlite3
+list_kerusakan = ['oli', 'ban']
 
-conn = sqlite3.connect("./instance/db_antrian.db")
-curs = conn.cursor()
-curs.execute('SELECT * FROM user')
-cek = curs.fetchone()
-print(cek)
+kerusakan = ''
+
+for i in list_kerusakan:
+    kerusakan += i
+print(kerusakan)
