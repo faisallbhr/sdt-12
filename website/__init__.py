@@ -29,19 +29,15 @@ def create_app():
     return app
 
 if not path.exists('instance/db_antrian.db'):
+    # KARENA MENGGUNAKAN QUEUE, MAKA TIDAK MENGGUNAKAN RELATIONSHIP
     class User(db.Model):
         __tablename__ = 'user'
         id = db.Column(db.Integer, primary_key=True)
         antrian = db.Column(db.Integer)
-
-    class Kerusakan(db.Model):
-        __tablename__ = 'kerusakan'
-        id = db.Column(db.Integer, primary_key=True)
         nama = db.Column(db.String(50))
         motor = db.Column(db.String(50))
         plat = db.Column(db.String(50))
         kerusakan = db.Column(db.String(100))
-        user_antrian = db.Column(db.Integer)
 
     class Nota(db.Model):
         __tablename__ = 'nota'
@@ -51,7 +47,7 @@ if not path.exists('instance/db_antrian.db'):
         plat = db.Column(db.String(50))
         kerusakan = db.Column(db.String(100))
         biaya = db.Column(db.Integer)
-        user_antrian = db.Column(db.Integer)
+        antrian = db.Column(db.Integer)
 
     class Admin(db.Model, UserMixin):
         __tablename__ = 'admin'

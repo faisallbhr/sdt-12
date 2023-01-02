@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_user, logout_user, current_user
 from . import db, app
-from .models import Admin, User, Kerusakan, Nota
+from .models import Admin, User, Nota
 import sqlite3
 import os
 
@@ -33,7 +33,7 @@ def user():
 
 
     # CEK TAMPILAN NOTA
-    cek_nota = curs.execute('SELECT * FROM nota WHERE user_antrian="{}"'.format(head))
+    cek_nota = curs.execute('SELECT * FROM nota WHERE antrian="{}"'.format(head-1))
     nota = cek_nota.fetchall()
     if nota == []:
         nota_nama = '-'
@@ -65,10 +65,8 @@ def user():
             flash('Isikan semua data dengan benar', category='error')
             return redirect(url_for('views.user'))
         else:
-            new_user = User(antrian=data)
-            new_kerusakan = Kerusakan(nama=nama.upper(), motor=motor.upper(), plat=plat.upper(), kerusakan=kerusakan.upper(), user_antrian=data)
+            new_user = User(antrian=data,nama=nama.upper(), motor=motor.upper(), plat=plat.upper(), kerusakan=kerusakan.upper())
             db.session.add(new_user)
-            db.session.add(new_kerusakan)
             db.session.commit()
             flash('Data telah ditambahkan', category='success')
             return redirect(url_for('views.user'))
@@ -114,7 +112,7 @@ def admin():
         head = curs.fetchone()[1]
 
     # CEK NOTA
-    cek = curs.execute('SELECT * FROM kerusakan WHERE user_antrian="{}"'.format(head))
+    cek = curs.execute('SELECT * FROM user WHERE antrian="{}"'.format(head))
     cek = cek.fetchall()
     if cek == []:
         nama = '-'
@@ -123,10 +121,10 @@ def admin():
         kerusakan = '-'
     else:
         for row in cek:
-            nama = row[1]
-            motor = row[2]
-            plat = row[3]
-            kerusakan = row[4]
+            nama = row[2]
+            motor = row[3]
+            plat = row[4]
+            kerusakan = row[5]
 
     if request.method=='POST':
         # SAAT KLIK PANGGIL
@@ -134,25 +132,40 @@ def admin():
             data = request.form.get('panggil')
             total = request.form.get('total')
             
-            if total.isnumeric():
-                User.query.filter_by(antrian=data).delete()
-                Kerusakan.query.filter_by(user_antrian=data).delete()
-                new_nota = Nota(nama=nama.upper(), motor=motor.upper(), plat=plat.upper(), kerusakan=kerusakan.upper(), biaya=int(total), user_antrian=int(data)+1)
-                db.session.add(new_nota)
-                db.session.commit()
+            cek_panggil = User.query.all()
+            if cek_panggil == []:
+                flash('Tidak ada antrian', category='error')
+                return redirect(url_for('views.admin'))
 
-                return redirect(url_for('views.admin'))
             else:
-                flash('Masukkan total biaya dengan benar', category='error')
-                return redirect(url_for('views.admin'))
+                if total.isnumeric():
+                    User.query.filter_by(antrian=data).delete()
+                    new_nota = Nota(nama=nama.upper(), motor=motor.upper(), plat=plat.upper(), kerusakan=kerusakan.upper(), biaya=int(total), antrian=int(data))
+                    db.session.add(new_nota)
+                    cek = User.query.all()
+                    if cek == []:
+                        nota = Nota.query.all()
+                        for i in range(len(nota)+1):
+                            Nota.query.filter_by(id=(i+1)).delete()
+                    db.session.commit()
+
+                    return redirect(url_for('views.admin'))
+                else:
+                    flash('Masukkan total biaya dengan benar', category='error')
+                    return redirect(url_for('views.admin'))
 
         # SAAT KLIK RESET NOTA
-        if request.form.get('delete') == 'RESET NOTA':
-            cek = Nota.query.all()
-            for i in range(len(cek)+1):
+        if request.form.get('delete') == 'RESET':
+            cek_user = User.query.all()
+            for i in range(len(cek_user)+1):
+                User.query.filter_by(id=(i+1)).delete()
+
+            cek_nota = Nota.query.all()
+            for i in range(len(cek_nota)+1):
                 Nota.query.filter_by(id=(i+1)).delete()
-                db.session.commit()
-            flash('Nota berhasil di reset', category='success')
+                
+            db.session.commit()
+            flash('Data berhasil di reset', category='success')
             return redirect(url_for('views.admin'))
 
     return render_template('admin.html', img1=pic1, img2=pic2, img3=pic3, user=current_user, panggil=head, nama=nama, motor=motor, plat=plat, kerusakan=kerusakan)
