@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_user, logout_user, current_user
 from . import db, app
 from .models import Admin, User, Kerusakan, Nota
@@ -61,13 +61,17 @@ def user():
         kerusakan = ''
         for rusak in list_kerusakan:
             kerusakan += rusak + ', '
-
-        new_user = User(antrian=data)
-        new_kerusakan = Kerusakan(nama=nama.upper(), motor=motor.upper(), plat=plat.upper(), kerusakan=kerusakan.upper(), user_antrian=data)
-        db.session.add(new_user)
-        db.session.add(new_kerusakan)
-        db.session.commit()
-        return redirect(url_for('views.user'))
+        if len(nama) < 2 or len(motor) < 2 or len(plat) < 2 or len(kerusakan) < 2 :
+            flash('Isikan semua data dengan benar', category='error')
+            return redirect(url_for('views.user'))
+        else:
+            new_user = User(antrian=data)
+            new_kerusakan = Kerusakan(nama=nama.upper(), motor=motor.upper(), plat=plat.upper(), kerusakan=kerusakan.upper(), user_antrian=data)
+            db.session.add(new_user)
+            db.session.add(new_kerusakan)
+            db.session.commit()
+            flash('Data telah ditambahkan', category='success')
+            return redirect(url_for('views.user'))
 
     return render_template("home.html", img1=pic1, img2=pic2, img3=pic3, antrian=tail+1, panggil=head-1, user=current_user, nota_nama=nota_nama, nota_motor=nota_motor, nota_plat=nota_plat,nota_kerusakan=nota_kerusakan, nota_biaya=nota_biaya)
 
@@ -86,6 +90,9 @@ def login():
         if user:
             login_user(user)
             return redirect(url_for('views.admin'))
+        else:
+            flash('Email atau password salah', category='error')
+            return redirect(url_for('views.login'))
 
     return render_template('login.html', user=current_user, img1=pic1, img2=pic2, img3=pic3)
 
@@ -127,13 +134,17 @@ def admin():
             data = request.form.get('panggil')
             total = request.form.get('total')
             
-            User.query.filter_by(antrian=data).delete()
-            Kerusakan.query.filter_by(user_antrian=data).delete()
-            new_nota = Nota(nama=nama.upper(), motor=motor.upper(), plat=plat.upper(), kerusakan=kerusakan.upper(), biaya=int(total), user_antrian=int(data)+1)
-            db.session.add(new_nota)
-            db.session.commit()
+            if total.isnumeric():
+                User.query.filter_by(antrian=data).delete()
+                Kerusakan.query.filter_by(user_antrian=data).delete()
+                new_nota = Nota(nama=nama.upper(), motor=motor.upper(), plat=plat.upper(), kerusakan=kerusakan.upper(), biaya=int(total), user_antrian=int(data)+1)
+                db.session.add(new_nota)
+                db.session.commit()
 
-            return redirect(url_for('views.admin'))
+                return redirect(url_for('views.admin'))
+            else:
+                flash('Masukkan total biaya dengan benar', category='error')
+                return redirect(url_for('views.admin'))
 
         # SAAT KLIK RESET NOTA
         if request.form.get('delete') == 'RESET NOTA':
@@ -141,6 +152,7 @@ def admin():
             for i in range(len(cek)+1):
                 Nota.query.filter_by(id=(i+1)).delete()
                 db.session.commit()
+            flash('Nota berhasil di reset', category='success')
             return redirect(url_for('views.admin'))
 
     return render_template('admin.html', img1=pic1, img2=pic2, img3=pic3, user=current_user, panggil=head, nama=nama, motor=motor, plat=plat, kerusakan=kerusakan)

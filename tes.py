@@ -1,7 +1,4 @@
-list_kerusakan = ['oli', 'ban']
-
-kerusakan = ''
-
-for i in list_kerusakan:
-    kerusakan += i
-print(kerusakan)
+tes1 = 1
+tes2 = '1'
+print(type(tes1))
+print(tes1 == tes2)
