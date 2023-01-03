@@ -1,7 +1,7 @@
 # BUG
 Panggilan terakhir tidak muncul di user (karena langsung terhapus)
 
-# Installation
+# Technologies
 - flask
 - flask-sqlalchemy
 - sqlite3
