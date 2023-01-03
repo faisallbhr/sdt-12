@@ -1,4 +1,4 @@
-# Description:
+# Description
 Tugas Struktur Data menggunakan Queue (first in first out)
 
 # Technologies
