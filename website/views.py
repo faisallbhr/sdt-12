@@ -1,7 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_user, logout_user, current_user
-from . import db, app
-from .models import Admin, User, Nota
+from . import db, app, Admin, User, Nota
 import sqlite3
 import os
 
@@ -80,7 +79,15 @@ def login():
     pic2 = os.path.join(app.config['UPLOAD_FOLDER'], '2.png')
     pic3 = os.path.join(app.config['UPLOAD_FOLDER'], 'montir.png')
 
-
+    conn = sqlite3.connect("./instance/db_antrian.db")
+    curs = conn.cursor()
+    curs.execute('SELECT * FROM admin')
+    cek = curs.fetchall()
+    if cek == []:
+        admin = Admin(email='sdt12@gmail.com', password='sdt12')
+        db.session.add(admin)
+        db.session.commit()
+        
     if request.method=='POST':
         email = request.form.get('email')
         password = request.form.get('password')
